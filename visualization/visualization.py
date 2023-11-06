@@ -7,7 +7,7 @@ def draw_rectangle(img, x0, y0, x1, y1, annotation_type):
     color = {"body": "#258039", "face": "#f5be41",
              "frame": "#31a9b8", "text": "#cf3721"}[annotation_type]
     draw = ImageDraw.Draw(img)
-    draw.rectangle([x0, y0, x1, y1], outline=color, width=10)
+    draw.rectangle([x0, y0, x1, y1], outline=color, width=3) 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -23,8 +23,10 @@ if __name__ == "__main__":
     p = manga109api.Parser(root_dir=manga109_root_dir)
     annotation = p.get_annotation(book=book)
     img = Image.open(p.img_path(book=book, index=page_index))
+    img = img.convert("RGB")
 
-    for annotation_type in ["body", "face", "frame", "text"]:
+    for annotation_type in ["text"]:
+    #for annotation_type in ["body", "face", "frame", "text"]:
         rois = annotation["page"][page_index][annotation_type]
         for roi in rois:
             draw_rectangle(img, roi["@xmin"], roi["@ymin"], roi["@xmax"], roi["@ymax"], annotation_type)
